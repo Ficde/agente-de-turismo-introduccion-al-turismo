@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espacio de Repaso - MOD Introducción al Turismo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ficde-azul-dark: #134252;
+            --ficde-azul-light: #2c5c6e;
+            --ficde-naranja: #e68161;
+            --ficde-naranja-hover: #ff9f85;
+            --tarjeta-bg: #f0f4f5;
+            --input-bg: #e2e8eb;
+            --texto-principal: #0f2d38;
+            --texto-secundario: #4a636e;
+            --verde-exito: #2e7d32;
+            --verde-bg: #c8e6c9;
+            --rojo-error: #c62828;
+            --naranja-bg: #ffe0b2;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--ficde-azul-dark) 0%, #0a252e 100%);
+            min-height: 100vh;
+            color: var(--texto-principal);
+            padding: 20px;
+            background-attachment: fixed;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo-img { height: 50px; width: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+
+        .module-tag {
+            background: var(--ficde-naranja);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .welcome-card {
+            background: var(--tarjeta-bg);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            border-bottom: 6px solid var(--ficde-naranja);
+            margin-bottom: 30px;
+        }
+
+        .welcome-title {
+            color: var(--ficde-azul-dark);
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+
+        .fede-avatar-large {
+            width: 140px; height: 140px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: var(--ficde-naranja);
+            padding: 5px;
+            box-shadow: 0 10px 25px rgba(230, 129, 97, 0.5);
+            cursor: pointer;
+            transition: transform 0.3s;
+            overflow: hidden;
+        }
+
+        .fede-avatar-large:hover { transform: scale(1.1); }
+
+        .fede-avatar-large img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid white;
+        }
+
+        .blocks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .block-card {
+            background: var(--tarjeta-bg);
+            padding: 30px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            border: 2px solid transparent;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .block-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--ficde-naranja);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .block-icon {
+            font-size: 3rem; margin-bottom: 15px;
+            background: rgba(19, 66, 82, 0.1);
+            width: 70px; height: 70px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; color: var(--ficde-azul-dark);
+        }
+
+        .block-title { color: var(--ficde-azul-dark); font-size: 1.3rem; font-weight: 700; margin-bottom: 10px; }
+
+        .block-desc { 
+            color: var(--texto-secundario); 
+            font-size: 0.9rem; 
+            line-height: 1.5; 
+            word-wrap: break-word;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .activity-screen {
+            display: none;
+            grid-template-columns: 280px 1fr;
+            gap: 25px;
+            align-items: start;
+        }
+
+        .activity-screen.active { display: grid; }
+
+        .tutor-sidebar {
+            background: var(--ficde-azul-light);
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            position: sticky; top: 20px;
+        }
+
+        .tutor-bubble {
+            background: rgba(255,255,255,0.95);
+            padding: 20px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            color: var(--ficde-azul-dark);
+            margin-top: 20px;
+            position: relative;
+            text-align: left;
+            word-wrap: break-word;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .tutor-bubble::after {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            border-width: 0 10px 10px;
+            border-style: solid;
+            border-color: transparent transparent rgba(255,255,255,0.95);
+            transform: translateX(-50%);
+        }
+
+        .activity-content {
+            background: var(--tarjeta-bg);
+            padding: 40px;
+            border-radius: 16px;
+            min-height: 500px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .act-badge {
+            background: var(--ficde-naranja);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .act-title { font-size: 1.8rem; color: var(--ficde-azul-dark); margin: 15px 0; font-weight: 800; }
+
+        .act-instruction { 
+            font-size: 1.1rem; 
+            color: var(--texto-secundario); 
+            margin-bottom: 30px; 
+            word-wrap: break-word;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .student-input {
+            width: 100%;
+            height: 150px;
+            padding: 20px;
+            background: var(--input-bg);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            color: var(--ficde-azul-dark);
+            transition: all 0.3s;
+        }
+
+        .student-input:focus { background: white; border-color: var(--ficde-naranja); outline: none; }
+
+        .fill-input {
+            border: none;
+            border-bottom: 2px solid var(--ficde-naranja);
+            background: transparent;
+            font-weight: 700;
+            color: var(--ficde-azul-dark);
+            text-align: center;
+            width: 200px;
+            font-size: 1.1rem;
+        }
+
+        .btn-action {
+            width: 100%;
+            padding: 18px;
+            margin-top: 30px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            background: linear-gradient(90deg, var(--ficde-naranja), #ff9f85);
+            color: white;
+            box-shadow: 0 6px 20px rgba(230, 129, 97, 0.4);
+            transition: transform 0.2s;
+        }
+
+        .btn-action:hover { transform: translateY(-3px); }
+
+        .btn-back {
+            background: transparent;
+            color: var(--texto-secundario);
+            box-shadow: none;
+            border: 2px solid #ccc;
+            margin-top: 15px;
+        }
+
+        .btn-back:hover { background: #e0e0e0; color: var(--ficde-azul-dark); }
+
+        .traffic-row, .checklist-item {
+            background: white;
+            margin-bottom: 12px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .traffic-row:hover, .checklist-item:hover { border-color: var(--ficde-naranja); transform: translateX(5px); }
+
+        .traffic-btn {
+            width: 35px; height: 35px;
+            border-radius: 50%; border: 2px solid #ddd;
+            cursor: pointer;
+            opacity: 0.3;
+        }
+
+        .traffic-btn.active { opacity: 1; transform: scale(1.2); border-color: var(--ficde-azul-dark); }
+
+        .bg-green { background: #4CAF50; }
+
+        .bg-yellow { background: #FFC107; }
+
+        .bg-red { background: #f44336; }
+
+        .check-box {
+            width: 24px; height: 24px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+
+        .checklist-item.selected { border-color: var(--ficde-naranja); background: #fff5f0; }
+
+        .checklist-item.selected .check-box { background: var(--ficde-naranja); border-color: var(--ficde-naranja); color: white; }
+
+        .feedback-area {
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 12px;
+            display: none;
+            animation: slideUp 0.4s;
+        }
+
+        .feedback-success { background: var(--verde-bg); color: #1b5e20; border-left: 6px solid var(--verde-exito); }
+
+        .feedback-retry { background: var(--naranja-bg); color: #bf360c; border-left: 6px solid #ef6c00; }
+
+        .feedback-fail { background: #cfd8dc; color: #37474f; border-left: 6px solid #455a64; }
+
+        #musicToggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--ficde-naranja);
+            color: white;
+            border: none;
+            cursor: pointer;
+            z-index: 100;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .activity-screen { grid-template-columns: 1fr; }
+            .tutor-sidebar { display: flex; align-items: center; gap: 20px; }
+            .fede-avatar-large { width: 80px; height: 80px; }
+            .tutor-bubble::after { display: none; }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- AUDIOS MP3 -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="chill-study-desk-focus-concentration-lofi-451180.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="saludoInicial" preload="auto" src="saludoinicial.mp3"></audio>
+    <audio id="mensaje1Ejercicios" preload="auto" src="mensaje1ejercicios.mp3"></audio>
+    <audio id="mensaje2Ejercicios" preload="auto" src="mensaje2ejercicios.mp3"></audio>
+    <audio id="mensaje3Ejercicios" preload="auto" src="mensaje3ejercicios.mp3"></audio>
+    <audio id="mensaje4Ejercicios" preload="auto" src="mensaje4ejercicios.mp3"></audio>
+    <audio id="respuestaCorrecta" preload="auto" src="respuestacorrecta.mp3"></audio>
+    <audio id="primerError" preload="auto" src="primererror.mp3"></audio>
+    <audio id="segundoError" preload="auto" src="segundoerror.mp3"></audio>
+    <audio id="loLograste" preload="auto" src="lolograste.mp3"></audio>
+
+    <audio id="hoverSound" preload="auto" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.m4a"></audio>
+    <audio id="clickSound" preload="auto" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.m4a"></audio>
+    <audio id="successSound" preload="auto" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.m4a"></audio>
+
+    <button id="musicToggle" onclick="toggleMusic()">🔇</button>
+
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <img src="logo.png" alt="FICDE" class="logo-img" onerror="this.style.display='none'; document.getElementById('altLogo').style.display='block'">
+                <h2 id="altLogo" style="display:none; color:white; font-weight:800;">FICDE</h2>
+            </div>
+            <div class="module-tag">Módulo: Introducción al Turismo</div>
+        </header>
+
+        <div id="selectionScreen">
+            <div class="welcome-card">
+                <div class="fede-avatar-large" onclick="playAudio('saludoInicial')">
+                    <img src="personaje.gif" alt="Fede">
+                </div>
+                <h1 class="welcome-title">Espacio de Repaso Interactivo</h1>
+                <p style="color: var(--texto-secundario); font-size: 1.1rem;">Donde el conocimiento se convierte en acción</p>
+            </div>
+
+            <div class="blocks-grid">
+                <div class="block-card" onclick="startModule('sintesis')">
+                    <div class="block-icon">🧠</div>
+                    <div class="block-title">Síntesis</div>
+                    <div class="block-desc">Definiciones fundamentales del turismo, clasificación de visitantes y flujos básicos.</div>
+                </div>
+
+                <div class="block-card" onclick="startModule('analisis')">
+                    <div class="block-icon">🔍</div>
+                    <div class="block-title">Análisis Crítico</div>
+                    <div class="block-desc">Impactos socioeconómicos, conflictos ambientales y retos de la hospitalidad.</div>
+                </div>
+
+                <div class="block-card" onclick="startModule('escenarios')">
+                    <div class="block-icon">🎬</div>
+                    <div class="block-title">Escenarios</div>
+                    <div class="block-desc">Motivaciones de viaje, flujos de origen-destino y comportamiento del consumidor.</div>
+                </div>
+
+                <div class="block-card" onclick="startModule('practica')">
+                    <div class="block-icon">⚡</div>
+                    <div class="block-title">Práctica</div>
+                    <div class="block-desc">Teoría de sistemas, modelos organizativos y gestión de la estructura.</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="activityScreen" class="activity-screen">
+            <div class="tutor-sidebar">
+                <div class="fede-avatar-large" style="width: 100px; height: 100px; border-color: var(--ficde-naranja);" onclick="replayTutorMessage()">
+                    <img src="personaje.gif" alt="Fede">
+                </div>
+                <div style="flex:1;">
+                    <h3 style="color:var(--ficde-naranja); margin-bottom:5px;">Tutor Fede</h3>
+                    <div class="tutor-bubble" id="tutorMessage"></div>
+                </div>
+            </div>
+
+            <div class="activity-content" id="activityContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        // ===== GESTIÓN DE AUDIO MP3 =====
+        const audioFiles = {
+            saludoInicial: document.getElementById('saludoInicial'),
+            mensaje1: document.getElementById('mensaje1Ejercicios'),
+            mensaje2: document.getElementById('mensaje2Ejercicios'),
+            mensaje3: document.getElementById('mensaje3Ejercicios'),
+            mensaje4: document.getElementById('mensaje4Ejercicios'),
+            correcto: document.getElementById('respuestaCorrecta'),
+            error1: document.getElementById('primerError'),
+            error2: document.getElementById('segundoError'),
+            lolograste: document.getElementById('loLograste')
+        };
+
+        function playAudio(audioKey) {
+            if (audioFiles[audioKey]) {
+                audioFiles[audioKey].currentTime = 0;
+                audioFiles[audioKey].play().catch(err => console.log('Error al reproducir audio:', err));
+            }
+        }
+
+        const bgMusic = document.getElementById('bgMusic');
+        const clickSoundEl = document.getElementById('clickSound');
+        const successSoundEl = document.getElementById('successSound');
+        const hoverSoundEl = document.getElementById('hoverSound');
+
+        let musicOn = false;
+        let audioUnlocked = false;
+
+        function unlockAudio() {
+            if (audioUnlocked) return;
+            Object.values(audioFiles).forEach(a => {
+                a.volume = 0;
+                const p = a.play();
+                if (p) p.then(() => { a.pause(); a.currentTime = 0; a.volume = 1; }).catch(()=>{});
+            });
+            audioUnlocked = true;
+        }
+
+        document.addEventListener('pointerdown', unlockAudio, { once: true });
+        document.addEventListener('keydown', unlockAudio, { once: true });
+
+        function toggleMusic() {
+            unlockAudio();
+            if (!musicOn) {
+                bgMusic.volume = 0.1;
+                bgMusic.play().catch(() => {});
+                document.getElementById('musicToggle').innerText = '🎵';
+            } else {
+                bgMusic.pause();
+                document.getElementById('musicToggle').innerText = '🔇';
+            }
+            musicOn = !musicOn;
+        }
+
+        function playSound(type) {
+            if (!audioUnlocked) return;
+            try {
+                if (type === 'click') { clickSoundEl.currentTime=0; clickSoundEl.volume=0.8; clickSoundEl.play().catch(()=>{}); }
+                if (type === 'success') { successSoundEl.currentTime=0; successSoundEl.volume=0.8; successSoundEl.play().catch(()=>{}); }
+                if (type === 'hover') { hoverSoundEl.currentTime=0; hoverSoundEl.volume=0.2; hoverSoundEl.play().catch(()=>{}); }
+            } catch (e) {}
+        }
+
+        function wireUiSounds() {
+            document.querySelectorAll('.block-card, .btn-action, .checklist-item, .traffic-row, .fede-avatar-large').forEach(el => {
+                if (el.dataset.sound === '1') return;
+                el.dataset.sound = '1';
+                el.addEventListener('mouseenter', () => playSound('hover'));
+                el.addEventListener('click', () => playSound('click'));
+            });
+        }
+
+        window.addEventListener('load', wireUiSounds);
+
+        // ===== NORMALIZACIÓN DE TEXTO =====
+        function normalizar(txt) {
+            return txt.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        }
+
+        // ===== ACTIVIDADES =====
+        const modules = {
+            sintesis: [
+                {
+                    type: 'text',
+                    badge: 'El fenómeno turístico',
+                    title: 'Dinamismo y complejidad',
+                    instruction: 'Describe los adjetivos que definen al turismo moderno',
+                    tutor: 'Busca en las primeras páginas cómo interactúan las diversas áreas y disciplinas.',
+                    explanation: 'El turismo es <strong>dinámico</strong> y <strong>complejo</strong> debido a su marco de interacción multifacético y cambiante.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['dinamico', 'complejo', 'multifacetico', 'turismo', 'es', 'debido', 'marco', 'interaccion', 'cambiante', 'fenomeno'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'text',
+                    badge: 'Orígenes conceptuales',
+                    title: 'Etimología del término',
+                    instruction: 'Expón las raíces latinas de las que se derivan los vocablos turista y turismo.',
+                    tutor: 'Revisa la sección que menciona la Real Academia de la Lengua Española.',
+                    explanation: 'El término procede del <strong>latín</strong> *tornus* y *torner*, haciendo referencia a un viaje circular.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['tornus', 'torner', 'latin', 'termino', 'procede', 'haciendo', 'referencia', 'viaje', 'circular', 'origenes'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'checklist',
+                    badge: 'Visiones de expertos',
+                    title: 'La definición de Hunziker y Krapf',
+                    instruction: 'Selecciona las condiciones necesarias para que un viaje sea considerado turismo según estos autores (1942).',
+                    items: [
+                        { text: 'Estancia de forasteros', correct: true },
+                        { text: 'Fenómenos generados por el viaje', correct: true },
+                        { text: 'Residencia permanente', correct: false },
+                        { text: 'Actividades remuneradas', correct: false }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'Recuerda que para ellos la estancia no debe implicar lucro ni permanencia definitiva.',
+                    explanation: 'Hunziker y Krapf definen el turismo como fenómenos de estancia sin residencia ni lucro.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Delimitación de la OMT',
+                    title: 'El factor tiempo',
+                    instruction: 'Detalla el periodo consecutivo mínimo y máximo que establece Francesco Frangialli para el turista.',
+                    tutor: 'Consulta la definición oficial que incluye fines de ocio o negocios.',
+                    explanation: 'El turista debe permanecer en el destino un tiempo <strong>mayor a un día</strong> e <strong>inferior a un año</strong>.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['inferior', 'año', 'mayor', 'dia', 'pernoctacion', 'turista', 'debe', 'permanecer', 'destino', 'tiempo'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'blanks',
+                    anyOrder: false,
+                    badge: 'Clasificación del consumo',
+                    title: 'Viajeros vs Visitantes',
+                    instruction: 'Completar la frase<br><br>El concepto de --- abarca a quien viaja por lucro, mientras que el --- solo se relaciona con actividades no lucrativas.',
+                    blanks: ['viajero', 'visitante'],
+                    tutor: 'El visitante es la célula básica del sistema turístico según la OMT.',
+                    explanation: 'El <strong>viajero</strong> es un concepto amplio, pero el <strong>visitante</strong> es el eje central del sector.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Tipología de visitantes',
+                    title: 'El excursionista',
+                    instruction: 'Indica la característica principal que diferencia al excursionista del turista tradicional.',
+                    tutor: 'Piensa en el tiempo de permanencia y el uso de alojamiento.',
+                    explanation: 'El excursionista es un <strong>visitante del día</strong> que <strong>no pernocta</strong> y permanece menos de 24 horas.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['pernocta', 'menos', '24', 'horas', 'visitante', 'dia', 'excursionista', 'es', 'permanece', 'tipologia'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'checklist',
+                    badge: 'Geografía del viaje',
+                    title: 'Formas de turismo',
+                    instruction: 'Elige las formas básicas de turismo que se distinguen en relación al territorio económico.',
+                    items: [
+                        { text: 'Turismo interno', correct: true },
+                        { text: 'Turismo receptivo', correct: true },
+                        { text: 'Turismo emisor', correct: true },
+                        { text: 'Turismo espacial', correct: false }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'Son tres formas que al combinarse generan los tipos básicos (interior, nacional, internacional).',
+                    explanation: 'Las formas básicas son el <strong>interno</strong>, <strong>receptivo</strong> y <strong>emisor</strong> según la ubicación del residente.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Categorías de combinación',
+                    title: 'Turismo Internacional',
+                    instruction: 'Identifica qué formas de turismo componen la categoría de turismo internacional.',
+                    tutor: 'Revisa el cuadro de tipos básicos de turismo.',
+                    explanation: 'El turismo internacional se compone de la suma del turismo <strong>receptor</strong> y el turismo <strong>emisor</strong>.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['receptor', 'emisor', 'flujos', 'turismo', 'internacional', 'se', 'compone', 'suma', 'del', 'categorias'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'traffic',
+                    badge: 'Motivaciones estadísticas',
+                    title: 'El porqué del viaje',
+                    instruction: 'Marca afirmaciones correctas sobre los motivos de visita según la OMT.',
+                    items: [
+                        { text: 'El ocio y las vacaciones son motivos turísticos.', color: 'green' },
+                        { text: 'El tratamiento de salud se clasifica como motivo de viaje.', color: 'green' },
+                        { text: 'Mudarse definitivamente a otro país es turismo.', color: 'red' },
+                        { text: 'Las visitas a parientes cuentan como flujo turístico.', color: 'green' }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'El turismo excluye cualquier cambio de residencia permanente.',
+                    explanation: 'Los motivos incluyen <strong>ocio</strong>, <strong>salud</strong> y familia, siempre que sean desplazamientos temporales.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Definición integral',
+                    title: 'La visión de Perla Guerrero',
+                    instruction: 'Resume qué elementos conjuga el turismo como actividad según la definición de la autora.',
+                    tutor: 'Observa el diagrama que incluye infraestructura y administración.',
+                    explanation: 'El turismo conjuga <strong>recursos turísticos</strong>, <strong>aparato gubernamental</strong> e <strong>industria del viaje</strong> de forma integral.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['recursos', 'turisticos', 'aparato', 'gubernamental', 'industria', 'viaje', 'turismo', 'conjuga', 'forma', 'integral'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                }
+            ],
+            analisis: [
+                {
+                    type: 'text',
+                    badge: 'Economía del sector',
+                    title: 'El traslado de la demanda',
+                    instruction: 'Analiza la diferencia crítica entre la producción turística y otros sectores productivos.',
+                    tutor: 'Fíjate en dónde se encuentran el producto y el consumidor al momento de la venta.',
+                    explanation: 'A diferencia de otros sectores, en el turismo la <strong>demanda se traslada</strong> al <strong>lugar de producción</strong>.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['demanda', 'traslada', 'lugar', 'produccion', 'consumo', 'local', 'diferencia', 'otros', 'sectores', 'turismo'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'text',
+                    badge: 'Consecuencias del desarrollo',
+                    title: 'Destrucción de atractivos',
+                    instruction: 'Evalúa cómo la urbanización excesiva puede volverse una amenaza para el propio destino turístico.',
+                    tutor: 'Revisa el enfoque medioambiental y los riesgos de las grandes construcciones.',
+                    explanation: 'La excesiva urbanización causa la <strong>destrucción de recursos</strong> naturales que originalmente atraían a los visitantes.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['destruccion', 'recursos', 'perdida', 'zonas', 'verdes', 'congestion', 'excesiva', 'urbanizacion', 'causa', 'naturales'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'checklist',
+                    badge: 'Balanza de pagos',
+                    title: 'Impactos económicos positivos',
+                    instruction: 'Determina qué beneficios financieros genera una gestión turística exitosa para un país.',
+                    items: [
+                        { text: 'Generación de divisas', correct: true },
+                        { text: 'Ingresos fiscales', correct: true },
+                        { text: 'Redistribución del ingreso', correct: true },
+                        { text: 'Deuda externa impagable', correct: false }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'El turismo ayuda a la economía nacional y al Producto Interno Bruto.',
+                    explanation: 'El sector <strong>genera divisas</strong> y favorece la <strong>redistribución del ingreso</strong> nacional significativamente.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Identidad y sociedad',
+                    title: 'El riesgo de la transculturación',
+                    instruction: 'Contrasta los efectos positivos y negativos de la interacción entre la comunidad local y los visitantes.',
+                    tutor: 'Lee sobre el enfoque social y cómo se afectan las tradiciones.',
+                    explanation: 'La interacción genera <strong>conciencia cultural</strong> pero también riesgos de <strong>transculturación</strong> en comunidades anfitrionas.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['transculturacion', 'conciencia', 'cultural', 'valores', 'interaccion', 'genera', 'pero', 'tambien', 'riesgos', 'comunidades'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'blanks',
+                    anyOrder: false,
+                    badge: 'Gestión de la calidad',
+                    title: 'Responsabilidad pública',
+                    instruction: 'Completar la frase<br><br>Las autoridades deben introducir --- para garantizar que el turismo de --- se proporcione a la población.',
+                    blanks: ['legislación pertinente', 'calidad'],
+                    tutor: 'Menciona a la OMT y a las Secretarías Nacionales como responsables.',
+                    explanation: 'Es necesaria una <strong>legislación pertinente</strong> para asegurar servicios de <strong>calidad</strong> y programas sostenibles.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Tecnología y movilidad',
+                    title: 'El impacto del GPS y la información',
+                    instruction: 'Cuestiona cómo el avance tecnológico ha modificado la relación del turista con la información.',
+                    tutor: 'Considera el uso de dispositivos y la reserva directa de productos.',
+                    explanation: 'La tecnología permite mayor <strong>rapidez</strong> y <strong>movilidad de capitales</strong> e información a nivel global.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['rapidez', 'movilidad', 'capitales', 'internet', 'tecnologia', 'permite', 'mayor', 'informacion', 'nivel', 'global'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'checklist',
+                    badge: 'El entorno latinoamericano',
+                    title: 'Desafíos regionales',
+                    instruction: 'Diferencia los elementos que componen la dimensión particular del turismo en América Latina.',
+                    items: [
+                        { text: 'Diversidad natural', correct: true },
+                        { text: 'Sociedades en desarrollo', correct: true },
+                        { text: 'Integración sostenible', correct: true },
+                        { text: 'Aislamiento cultural', correct: false }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'El manual resalta la hospitalidad y la biodiversidad como claves regionales.',
+                    explanation: 'Latinoamérica utiliza su <strong>diversidad natural</strong> para buscar una <strong>integración sostenible</strong> y crecimiento.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Política y diplomacia',
+                    title: 'Marcos normativos',
+                    instruction: 'Puntualiza la importancia de las relaciones diplomáticas en la generación de flujos internacionales.',
+                    tutor: 'Busca cómo el gobierno y la iniciativa privada deben coordinarse.',
+                    explanation: 'Las relaciones diplomáticas generan turismo mundial basado en la <strong>ética</strong> y la <strong>responsabilidad</strong>.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['etica', 'responsabilidad', 'innovacion', 'relaciones', 'diplomaticas', 'generan', 'turismo', 'mundial', 'basado', 'politica'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'traffic',
+                    badge: 'El factor humano en el servicio',
+                    title: 'Actitud local',
+                    instruction: 'Valora las afirmaciones sobre el enfoque social del turismo.',
+                    items: [
+                        { text: 'La actitud de la gente local es irrelevante para el éxito turístico.', color: 'red' },
+                        { text: 'La hospitalidad reconocida fortalece la identidad regional.', color: 'green' },
+                        { text: 'El turismo es un instrumento para el desarrollo sociocultural.', color: 'green' },
+                        { text: 'Las comunidades no deben conservar su identidad frente al turista.', color: 'red' }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'La gente local es un pilar fundamental en la experiencia del visitante.',
+                    explanation: 'La <strong>hospitalidad</strong> fortalece la identidad y permite un desarrollo <strong>sociocultural</strong> armonioso.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Sostenibilidad futura',
+                    title: 'Protección ambiental',
+                    instruction: 'Sintetiza cómo el turismo puede servir como herramienta financiera para la ecología.',
+                    tutor: 'Mira el lado positivo del impacto ambiental en el texto.',
+                    explanation: 'El turismo es una herramienta para <strong>financiar la protección</strong> y conservación de <strong>áreas naturales</strong>.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['financiar', 'proteccion', 'areas', 'naturales', 'biodiversidad', 'turismo', 'es', 'una', 'herramienta', 'conservacion'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                }
+            ],
+            escenarios: [
+                {
+                    type: 'text',
+                    badge: 'Terminología del tiempo',
+                    title: 'Ocio vs Recreo',
+                    instruction: 'Relata una situación donde un trabajador use su tiempo sobrante para actividades productivas nuevas.',
+                    tutor: 'Diferencia entre el simple descanso y la actividad creativa durante el viaje.',
+                    explanation: 'El <strong>ocio</strong> es el tiempo disponible, mientras el <strong>recreo</strong> implica actividades creativas en el <strong>tiempo libre</strong>.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['ocio', 'recreo', 'tiempo', 'libre', 'es', 'disponible', 'mientras', 'implica', 'actividades', 'creativas'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'traffic',
+                    badge: 'Perfiles de viajeros',
+                    title: 'Clasificación por lucro',
+                    instruction: 'Clasifica si estos perfiles actúan como "Visitantes"',
+                    items: [
+                        { text: 'Un diplomático en misión oficial en el extranjero.', color: 'red' },
+                        { text: 'Una familia de vacaciones en una playa vecina.', color: 'green' },
+                        { text: 'Un refugiado cruzando una frontera por seguridad.', color: 'red' },
+                        { text: 'Un deportista que viaja para competir sin sueldo local.', color: 'green' }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'El visitante nunca debe ejercer actividades remuneradas en el destino.',
+                    explanation: 'El <strong>visitante</strong> se distingue por realizar actividades sin <strong>lucro</strong> en el lugar visitado.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Flujos geográficos',
+                    title: 'El modelo de origen-destino',
+                    instruction: 'Plantea cómo se representan los flujos de ida y vuelta en el esquema de Fernández Fúster.',
+                    tutor: 'Visualiza el diagrama donde las personas salen de un punto para llegar a otro.',
+                    explanation: 'Los flujos conectan el <strong>origen</strong> con el <strong>destino</strong> a través del <strong>tránsito</strong> o recorrido.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['origen', 'destino', 'transito', 'flujos', 'conectan', 'con', 'el', 'traves', 'del', 'recorrido'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'checklist',
+                    badge: 'Estilos de viaje',
+                    title: 'Individual vs Organizado',
+                    instruction: 'Escoge las características de un "paquete turístico" según la forma de contratación.',
+                    items: [
+                        { text: 'Un solo acto de compra', correct: true },
+                        { text: 'Precio global', correct: true },
+                        { text: 'Compra directa por separado', correct: false },
+                        { text: 'Contratación independiente', correct: false }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'Se refiere a cuando todos los servicios se adquieren juntos.',
+                    explanation: 'El paquete turístico implica un <strong>precio global</strong> en un <strong>solo acto de compra</strong>.'
+                },
+                {
+                    type: 'text',
+                    badge: 'El modelo de Neil Leiper',
+                    title: 'Regiones del sistema',
+                    instruction: 'Narra la función del "actor principal" en la región generadora de turistas.',
+                    tutor: 'Identifica quién inicia todo el proceso de transacciones en el modelo.',
+                    explanation: 'Los <strong>turistas</strong> son quienes logran <strong>poner en marcha</strong> toda la <strong>maquinaria turística</strong> regional.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['turistas', 'poner', 'marcha', 'maquinaria', 'turistica', 'son', 'quienes', 'logran', 'toda', 'la'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'traffic',
+                    badge: 'Segmentación sociológica',
+                    title: 'Masas y alternativas',
+                    instruction: 'Examina estas situaciones y clasifica el tipo de turismo correspondiente.',
+                    items: [
+                        { text: '6,000 personas viajando juntas en un crucero gigante (Turismo de Masas).', color: 'green' },
+                        { text: 'Un grupo haciendo ecoturismo en una selva virgen (Turismo Alternativo).', color: 'green' },
+                        { text: 'Obreros viajando con subsidio sindical (Turismo Social).', color: 'green' },
+                        { text: 'Visitar una ciudad fronteriza para compras diarias (Turismo de Masas).', color: 'red' }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'El turismo de masas busca grandes concentraciones en centros receptores.',
+                    explanation: 'El <strong>turismo de masas</strong> genera grandes concentraciones, mientras el <strong>alternativo</strong> busca opciones específicas.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Permanencia en el destino',
+                    title: 'Itinerancia vs Residencia',
+                    instruction: 'Ilustra un escenario donde un visitante realice "turismo itinerante" en Europa.',
+                    tutor: 'Piensa en visitas rápidas a varios sitios en un solo viaje.',
+                    explanation: 'El <strong>turismo itinerante</strong> se asocia a <strong>circuitos turísticos</strong> de muy <strong>corto tiempo</strong> en cada sitio.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['corto', 'tiempo', 'circuitos', 'turisticos', 'tours', 'turismo', 'itinerante', 'se', 'asocia', 'sitio'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'checklist',
+                    badge: 'Unidades de consumo',
+                    title: 'Pasajeros de cruceros',
+                    instruction: 'Separa las categorías donde se incluye específicamente a los pasajeros de cruceros.',
+                    items: [
+                        { text: 'Excursionistas', correct: true },
+                        { text: 'Visitantes del día', correct: true },
+                        { text: 'Turistas residenciales', correct: false },
+                        { text: 'Inmigrantes', correct: false }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'Fíjate si pernoctan en un alojamiento colectivo del país visitado.',
+                    explanation: 'Los pasajeros de cruceros son <strong>excursionistas</strong> o <strong>visitantes del día</strong> si no pernoctan en tierra.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Retroalimentación del sistema',
+                    title: 'La experiencia turística',
+                    instruction: 'Caracteriza el elemento del modelo de Hall que sirve para evaluar los impactos personales del viaje.',
+                    tutor: 'Observa qué componente devuelve información al sistema después del consumo.',
+                    explanation: 'La <strong>experiencia turística</strong> retroalimenta el sistema basándose en las <strong>expectativas</strong> e imágenes previas.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['experiencia', 'turistica', 'expectativas', 'imagenes', 'retroalimenta', 'el', 'sistema', 'basandose', 'en', 'previas'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'traffic',
+                    badge: 'El entorno habitual',
+                    title: 'Desplazamiento geográfico',
+                    instruction: 'Prioriza las condiciones de un "visitante interno".',
+                    items: [
+                        { text: 'Viaja fuera de su país de residencia habitual.', color: 'red' },
+                        { text: 'Se desplaza a un lugar distinto al de su procedencia dentro del país.', color: 'green' },
+                        { text: 'El motivo es ejercer una actividad remunerada.', color: 'red' },
+                        { text: 'La duración del viaje no es mayor a 12 meses.', color: 'green' }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'El visitante interno recorre su propio territorio económico.',
+                    explanation: 'El <strong>visitante interno</strong> se desplaza en su país por menos de <strong>12 meses</strong> sin fines de lucro.'
+                }
+            ],
+            practica: [
+                {
+                    type: 'checklist',
+                    badge: 'Jerarquía sistémica',
+                    title: 'Componentes del sistema',
+                    instruction: 'Organiza los niveles de un sistema según su pertenencia de menor a mayor complejidad.',
+                    items: [
+                        { text: 'Subsistema', correct: true },
+                        { text: 'Sistema', correct: true },
+                        { text: 'Suprasistema', correct: true },
+                        { text: 'Componente único', correct: false }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'El suprasistema es el marco mayor que representa el universo o ambiente.',
+                    explanation: 'Un <strong>subsistema</strong> se integra en un <strong>sistema</strong>, el cual pertenece a un <strong>suprasistema</strong> mayor.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Modelos de Burns y Stalker',
+                    title: 'El modelo mecánico',
+                    instruction: 'Ejecuta una descripción de cómo fluye la información en una organización de estructura mecánica.',
+                    tutor: 'Este modelo se da en entornos estables y cerrados.',
+                    explanation: 'En el <strong>modelo mecánico</strong> predomina la <strong>interacción vertical</strong> y el <strong>control</strong> jerárquico de tareas.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['interaccion', 'vertical', 'ordenes', 'superiores', 'control', 'modelo', 'mecanico', 'predomina', 'jerarquico', 'tareas'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'blanks',
+                    anyOrder: false,
+                    badge: 'Pensamiento sistémico',
+                    title: 'Principios de Hegel',
+                    instruction: 'Completar la frase<br><br>El --- es mayor que la suma de sus --- y las partes no pueden comprenderse aisladas.',
+                    blanks: ['todo', 'partes'],
+                    tutor: 'Estos conceptos son la base de la Teoría General de Sistemas aplicada al turismo.',
+                    explanation: 'La teoría dicta que el <strong>todo</strong> es superior a sus <strong>partes</strong> interrelacionadas dinámicamente.'
+                },
+                {
+                    type: 'traffic',
+                    badge: 'Operación orgánica',
+                    title: 'Flexibilidad organizacional',
+                    instruction: 'Verifica qué rasgos pertenecen al "modelo orgánico" de gestión turística.',
+                    items: [
+                        { text: 'El intercambio de información es desde dentro hacia fuera (entorno).', color: 'green' },
+                        { text: 'La interacción es exclusivamente vertical y rígida.', color: 'red' },
+                        { text: 'Se transfiere mucha responsabilidad a las personas.', color: 'green' },
+                        { text: 'Es un ambiente dinámico que exige flexibilidad.', color: 'green' }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'Este modelo facilita la retroalimentación y la cooperación.',
+                    explanation: 'El <strong>modelo orgánico</strong> fomenta la <strong>flexibilidad</strong> y la transferencia de <strong>responsabilidad</strong> al personal.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Insumos del sistema',
+                    title: 'Entradas y Salidas',
+                    instruction: 'Desarrolla cuáles son las fuentes principales de "entrada" para ejecutar acciones en el sistema.',
+                    tutor: 'Revisa el diagrama de conectividad y flujo de energía.',
+                    explanation: 'Las entradas del sistema requieren de <strong>información</strong>, <strong>energía</strong> y recursos para su funcionamiento.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['informacion', 'energia', 'recursos', 'entradas', 'del', 'sistema', 'requieren', 'de', 'para', 'funcionamiento'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'checklist',
+                    badge: 'Teoría de Beni (2000)',
+                    title: 'Subsistemas estructurales',
+                    instruction: 'Aplica los conceptos de Beni seleccionando los tres objetivos de análisis de su modelo.',
+                    items: [
+                        { text: 'Relaciones ambientales', correct: true },
+                        { text: 'Relaciones operacionales', correct: true },
+                        { text: 'Organización estructural', correct: true },
+                        { text: 'Flujos mecánicos', correct: false }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'Cada subsistema identifica elementos de interacción, mercado y leyes.',
+                    explanation: 'Beni analiza las <strong>relaciones ambientales</strong>, <strong>operacionales</strong> y la <strong>organización estructural</strong> del mercado.'
+                },
+                {
+                    type: 'text',
+                    badge: 'La Supraestructura',
+                    title: 'Organismos y Normas',
+                    instruction: 'Gestiona una explicación sobre la función de la superestructura dentro del conjunto organizacional.',
+                    tutor: 'Es la encargada de normar la estructura jurídico-administrativa.',
+                    explanation: 'La <strong>superestructura</strong> coordina a los <strong>organismos públicos</strong> para <strong>regular</strong> la actividad y la infraestructura.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['regular', 'organismos', 'publicos', 'infraestructura', 'superestructura', 'coordina', 'los', 'para', 'actividad', 'la'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'traffic',
+                    badge: 'Metodología sistémica',
+                    title: 'Toma de decisiones',
+                    instruction: 'Coordina la veracidad de estas ventajas al trabajar con un enfoque de sistemas.',
+                    items: [
+                        { text: 'Ayuda a percatarse de dónde existe un problema.', color: 'green' },
+                        { text: 'Garantiza que nunca habrá caos en la organización.', color: 'red' },
+                        { text: 'Facilita la toma de decisiones oportunas y correctas.', color: 'green' },
+                        { text: 'Permite conocer las operaciones y su relación con el ambiente.', color: 'green' }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'El sistema es un marco de referencia para la administración.',
+                    explanation: 'El enfoque sistémico facilita la <strong>toma de decisiones</strong> al identificar problemas y <strong>operaciones</strong> interconectadas.'
+                },
+                {
+                    type: 'text',
+                    badge: 'Estructura Turística',
+                    title: 'La planta y sus componentes',
+                    instruction: 'Estructura una lista de los elementos que componen la oferta turística según el modelo de Hall.',
+                    tutor: 'Mira el cuadro de oferta de productos turísticos en el manual.',
+                    explanation: 'La oferta incluye <strong>agencias</strong>, <strong>alojamiento</strong>, <strong>restaurantes</strong> y servicios de transporte especializados.',
+                    validation: (raw) => {
+                        const v = normalizar(raw);
+                        const roots = ['agencias', 'alojamiento', 'restaurantes', 'transporte', 'oferta', 'incluye', 'servicios', 'especializados', 'modelo', 'hall'];
+                        return roots.filter(r => v.includes(r)).length >= 2;
+                    }
+                },
+                {
+                    type: 'checklist',
+                    badge: 'Planificación Estratégica',
+                    title: 'Conclusión del Sistema',
+                    instruction: 'Sobre la sinergia necesaria en la industria señala las opciones correctas',
+                    items: [
+                        { text: 'Turismo responsable', correct: true },
+                        { text: 'Comunidades locales', correct: true },
+                        { text: 'Desarrollo sostenible', correct: true },
+                        { text: 'Gestión autoritaria', correct: false }
+                    ].sort(() => Math.random() - 0.5),
+                    tutor: 'La sinergia busca armonía entre el visitante y el entorno receptor.',
+                    explanation: 'La sinergia promueve un <strong>turismo responsable</strong> en armonía con las <strong>comunidades locales</strong> y el <strong>desarrollo sostenible</strong>.'
+                }
+            ]
+        };
+
+        let currentModule = '';
+        let currentIndex = 0;
+        let attemptCount = 0;
+        let lastAudioModule = null;
+
+        // ===== MAPEO DE MÓDULOS A AUDIOS =====
+        const moduloAudioMap = {
+            'sintesis': 'mensaje1',
+            'analisis': 'mensaje2',
+            'escenarios': 'mensaje3',
+            'practica': 'mensaje4'
+        };
+
+        function startModule(id) {
+            playSound('click');
+            currentModule = id;
+            currentIndex = 0;
+            attemptCount = 0;
+            lastAudioModule = id;
+
+            // Reproducir el audio del módulo correspondiente
+            const audioKey = moduloAudioMap[id];
+            if (audioKey) {
+                playAudio(audioKey);
+            }
+
+            document.getElementById('selectionScreen').style.display = 'none';
+            document.getElementById('activityScreen').classList.add('active');
+
+            setTimeout(loadActivity, 300);
+        }
+
+        function loadActivity() {
+            attemptCount = 0;
+
+            if (currentIndex >= modules[currentModule].length) {
+                // Reproducir "lolograste.mp3" al terminar TODAS las preguntas
+                playAudio('lolograste');
+                playSound('success');
+                alert('¡Excelente! Completaste este bloque de repaso.');
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
+                return;
+            }
+
+            const data = modules[currentModule][currentIndex];
+            const container = document.getElementById('activityContainer');
+
+            const msg = `Pregunta ${currentIndex + 1} de ${modules[currentModule].length}: ${data.tutor}`;
+            document.getElementById('tutorMessage').innerText = msg;
+
+            let html = `<span class="act-badge">${data.badge}</span>
+                        <h2 class="act-title">${data.title}</h2>
+                        <p class="act-instruction">${data.instruction}</p>`;
+
+            if (data.type === 'text') {
+                html += `<textarea id="txtInput" class="student-input" placeholder="Escribe tu respuesta con tus palabras..."></textarea>`;
+            } else if (data.type === 'blanks') {
+                html += `<div style="font-size:1.2rem; line-height:2.5;">`;
+                data.blanks.forEach((b, i) => {
+                    html += `${i + 1}. <input type="text" class="fill-input" data-ans="${b}"> <br>`;
+                });
+                html += `</div>`;
+            } else if (data.type === 'traffic') {
+                trafficAns = {};
+                data.items.forEach((item, i) => {
+                    html += `<div class="traffic-row" id="row-${i}">
+                                <span>${item.text}</span>
+                                <div style="display:flex; gap:10px;">
+                                    <div class="traffic-btn bg-green" onclick="selTraffic(${i}, 'green')"></div>
+                                    <div class="traffic-btn bg-yellow" onclick="selTraffic(${i}, 'yellow')"></div>
+                                    <div class="traffic-btn bg-red" onclick="selTraffic(${i}, 'red')"></div>
+                                </div>
+                            </div>`;
+                });
+            } else if (data.type === 'checklist') {
+                data.items.forEach((item) => {
+                    html += `<div class="checklist-item" onclick="toggleCheck(this)" data-correct="${item.correct}">
+                                <div class="check-box"></div>
+                                <span>${item.text}</span>
+                            </div>`;
+                });
+            }
+
+            html += `<div id="feedback" class="feedback-area"></div>
+                     <button id="btnCheck" class="btn-action" onclick="validate()">Verificar respuesta</button>
+                     <button class="btn-action btn-back" onclick="location.reload()">Salir al menú</button>`;
+
+            container.innerHTML = html;
+            wireUiSounds();
+        }
+
+        let trafficAns = {};
+
+        function selTraffic(idx, color) {
+            trafficAns[idx] = color;
+            const row = document.getElementById(`row-${idx}`);
+            row.querySelectorAll('.traffic-btn').forEach(b => b.classList.remove('active'));
+            row.querySelector(`.bg-${color}`).classList.add('active');
+            playSound('click');
+        }
+
+        function toggleCheck(el) {
+            el.classList.toggle('selected');
+            el.querySelector('.check-box').innerText = el.classList.contains('selected') ? '✓' : '';
+
+            if (el.classList.contains('selected')) {
+                el.style.borderColor = 'var(--ficde-naranja)';
+                el.querySelector('.check-box').style.background = 'var(--ficde-naranja)';
+                el.querySelector('.check-box').style.borderColor = 'var(--ficde-naranja)';
+                el.querySelector('.check-box').style.color = 'white';
+            } else {
+                el.style.borderColor = 'transparent';
+                el.querySelector('.check-box').style.background = 'transparent';
+                el.querySelector('.check-box').style.borderColor = '#ccc';
+            }
+
+            playSound('click');
+        }
+
+        function validate() {
+            const data = modules[currentModule][currentIndex];
+            const feedback = document.getElementById('feedback');
+            let isCorrect = false;
+
+            if (data.type === 'text') {
+                const val = document.getElementById('txtInput').value;
+                isCorrect = data.validation(val);
+            } else if (data.type === 'blanks') {
+                const inputs = document.querySelectorAll('.fill-input');
+                let hits = 0;
+                let usedAnswers = [];
+                inputs.forEach(inp => {
+                    const v = normalizar(inp.value.trim());
+                    if (v.length > 0) {
+                        if (data.anyOrder) {
+                            const matchedIdx = data.blanks.findIndex((ans, idx) => {
+                                if (usedAnswers.includes(idx)) return false;
+                                const normAns = normalizar(ans.trim());
+                                return (normAns === v || (v.length > 1 && normAns.startsWith(v.slice(0, Math.max(2, Math.min(v.length, normAns.length))))));
+                            });
+                            if (matchedIdx !== -1) {
+                                hits++;
+                                usedAnswers.push(matchedIdx);
+                            }
+                        } else {
+                            const ans = normalizar(inp.dataset.ans.trim());
+                            if (ans === v || (v.length > 1 && ans.startsWith(v.slice(0, Math.max(2, Math.min(v.length, ans.length)))))) {
+                                hits++;
+                            }
+                        }
+                    }
+                });
+                isCorrect = (hits === data.blanks.length);
+            } else if (data.type === 'traffic') {
+                let hits = 0;
+                data.items.forEach((item, i) => { if (trafficAns[i] === item.color) hits++; });
+                isCorrect = (hits === data.items.length);
+            } else if (data.type === 'checklist') {
+                let correct = true;
+                document.querySelectorAll('.checklist-item').forEach(item => {
+                    const sel = item.classList.contains('selected');
+                    const should = item.dataset.correct === 'true';
+                    if (sel !== should) correct = false;
+                });
+                isCorrect = correct;
+            }
+
+            feedback.style.display = 'block';
+
+            if (isCorrect) {
+                playAudio('correcto');
+                playSound('success');
+                feedback.className = 'feedback-area feedback-success';
+                feedback.innerHTML = `<strong>¡Muy bien!</strong><br>${data.explanation}`;
+                document.getElementById('btnCheck').innerText = 'Siguiente pregunta →';
+                document.getElementById('btnCheck').onclick = () => { currentIndex++; loadActivity(); };
+            } else {
+                attemptCount++;
+
+                if (attemptCount < 2) {
+                    playAudio('error1');
+                    feedback.className = 'feedback-area feedback-retry';
+                    feedback.innerHTML = `<strong>Buen intento.</strong> Revisa tu respuesta. Pista: ${data.tutor}`;
+                } else {
+                    playAudio('error2');
+                    feedback.className = 'feedback-area feedback-fail';
+                    feedback.innerHTML = `<strong>Sigamos adelante para aprender juntos:</strong><br>${data.explanation}`;
+                    document.getElementById('btnCheck').innerText = 'Entendido, continuar →';
+                    document.getElementById('btnCheck').onclick = () => { currentIndex++; loadActivity(); };
+                }
+            }
+        }
+
+        function replayTutorMessage() {
+            if (lastAudioModule) {
+                const audioKey = moduloAudioMap[lastAudioModule];
+                if (audioKey) {
+                    playAudio(audioKey);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
